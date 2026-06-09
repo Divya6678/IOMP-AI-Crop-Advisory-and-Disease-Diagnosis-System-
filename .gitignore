@@ -19,7 +19,7 @@ Datasetraw/
 dataset_processed/
 
 # ML Models
-# *.h5 - Removed so the model file can be pushed to GitHub
+*.h5
 
 # Virtual environments
 venv/
