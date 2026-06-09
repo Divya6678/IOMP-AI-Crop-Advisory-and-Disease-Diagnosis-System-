@@ -5,7 +5,7 @@ from predict import predict_disease
 from database import init_db, insert_history, get_history, register_user, verify_user
 
 app = Flask(__name__)
-app.secret_key = "agrovision_secret_key_123" # Change this for production
+app.secret_key = os.environ.get("SECRET_KEY", "agrovision_fallback_key_123")
 
 # ==============================
 # CONFIGURATION
