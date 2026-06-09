@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sign Up - AgroVision AI</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+<script defer src="{{ url_for('static', filename='js/main.js') }}"></script>
+</head>
+<body>
+
+<nav class="navbar">
+<div class="logo" onclick="go('/')">
+  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="color: var(--primary);"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+  AgroVision <span style="font-weight: 300; opacity: 0.8;">AI</span>
+</div>
+<ul>
+<li onclick="go('/')">Home</li>
+<li onclick="go('/dashboard')">Dashboard</li>
+<li onclick="go('/history')">History</li>
+<li onclick="go('/contact')">Contact</li>
+{% if not session.get('user_id') %}
+<li onclick="go('/login')">Login</li>
+{% else %}
+<li onclick="go('/logout')">Logout</li>
+{% endif %}
+</ul>
+</nav>
+
+<div class="container">
+  <div class="card form-card">
+    <div style="text-align: center; margin-bottom: 2rem;">
+      <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="color: var(--primary); margin-bottom: 1rem;"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg>
+      <h2>Create Account</h2>
+      <p>Join AgroVision today</p>
+    </div>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="alert alert-{{ category }}" style="color: {% if category == 'error' %}#e74c3c{% else %}#2ecc71{% endif %}; text-align: center; margin-bottom: 1rem;">
+            {{ message }}
+          </div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    <form method="POST" action="/signup">
+      <input type="text" name="name" placeholder="Full Name" required>
+      <input type="email" name="email" placeholder="Email Address" required>
+      <input type="password" name="password" placeholder="Password" required>
+      <button class="btn" type="submit">Sign Up</button>
+    </form>
+    <div style="text-align: center; margin-top: 1.5rem; font-size: 0.95rem;">
+      <p>Already have an account? <a href="#" onclick="go('/login')">Log in</a></p>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

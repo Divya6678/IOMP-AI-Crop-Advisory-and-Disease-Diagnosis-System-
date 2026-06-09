@@ -1,0 +1,10 @@
+<div style="background: rgba(255,255,255,0.6); padding: 1.5rem; border-radius: var(--radius-md); border: 1px solid var(--card-border);">
+  <h3 style="margin-bottom: 1rem; color: var(--primary-dark);">Prediction Result</h3>
+  <div style="display: grid; gap: 0.75rem;">
+    <p><b>Crop:</b> {{ result.Crop }}</p>
+    <p><b>Disease:</b> <span style="color: #b91c1c; font-weight: 600;">{{ result.Disease }}</span></p>
+    <p><b>Confidence:</b> <span class="badge badge-success">{{ result.Confidence }}%</span></p>
+    <p><b>Severity:</b> <span class="badge badge-warning">{{ result.Severity }}</span></p>
+    <p><b>Treatment:</b> {{ result.Treatment }}</p>
+  </div>
+</div>

@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard - AgroVision AI</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <script defer src="{{ url_for('static', filename='js/main.js') }}"></script>
+  <script defer src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+</head>
+
+<body>
+
+  <nav class="navbar">
+    <div class="logo" onclick="go('/')">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+        stroke-linecap="round" stroke-linejoin="round" style="color: var(--primary);">
+        <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
+      </svg>
+      AgroVision <span style="font-weight: 300; opacity: 0.8;">AI</span>
+    </div>
+    <ul>
+      <li onclick="go('/')">Home</li>
+      <li onclick="go('/dashboard')">Dashboard</li>
+      <li onclick="go('/history')">History</li>
+      <li onclick="go('/contact')">Contact</li>
+      {% if not session.get('user_id') %}
+      <li onclick="go('/login')">Login</li>
+      {% else %}
+      <li onclick="go('/logout')">Logout</li>
+      {% endif %}
+    </ul>
+  </nav>
+
+  <div class="container">
+
+    <div
+      style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem;">
+      <div>
+        <h2>Dashboard</h2>
+        <p>Upload a crop leaf image to detect diseases and get instant advisory.</p>
+      </div>
+    </div>
+
+    <div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));">
+
+      <div class="card" style="display: flex; flex-direction: column;">
+        <h3>
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round" style="color: var(--primary);">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+            <polyline points="17 8 12 3 7 8" />
+            <line x1="12" y1="3" x2="12" y2="15" />
+          </svg>
+          Upload Leaf Image
+        </h3>
+        <p style="margin-bottom: 1.5rem; font-size: 0.95rem;">Please upload a clear image of the affected crop leaf for
+          best AI analysis results.</p>
+
+        <div style="flex: 1; display: flex; flex-direction: column; justify-content: center;">
+          <select id="cropSelect"
+            style="margin-bottom: 20px; padding: 12px; border-radius: 8px; border: 1px solid #d1d5db; font-size: 1rem; color: #374151; background-color: #f9fafb; font-family: inherit;">
+            <option value="" disabled selected>Select Plant Name...</option>
+            <option value="Apple">Apple</option>
+            <option value="Blueberry">Blueberry</option>
+            <option value="Cherry_(including_sour)">Cherry</option>
+            <option value="Corn_(maize)">Corn</option>
+            <option value="Grape">Grape</option>
+            <option value="Orange">Orange</option>
+            <option value="Peach">Peach</option>
+            <option value="Pepper,_bell">Pepper</option>
+            <option value="Potato">Potato</option>
+            <option value="Raspberry">Raspberry</option>
+            <option value="Soybean">Soybean</option>
+            <option value="Squash">Squash</option>
+            <option value="Strawberry">Strawberry</option>
+            <option value="Tomato">Tomato</option>
+          </select>
+          <input type="file" id="imageInput" accept="image/*" style="margin-bottom: 20px;">
+          <button class="btn" onclick="runAI()">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10" />
+              <path d="M12 16v-4" />
+              <path d="M12 8h.01" />
+            </svg>
+            Run AI Diagnosis
+          </button>
+        </div>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 2rem;">
+        <div class="card" style="padding: 2rem;">
+          <h3>
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round" style="color: var(--primary);">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+              <polyline points="14 2 14 8 20 8" />
+              <line x1="16" y1="13" x2="8" y2="13" />
+              <line x1="16" y1="17" x2="8" y2="17" />
+              <polyline points="10 9 9 9 8 9" />
+            </svg>
+            Diagnosis Result
+          </h3>
+          <div id="result">
+            <p style="color: var(--text-muted); font-style: italic;">No result yet. Upload an image to begin.</p>
+          </div>
+        </div>
+
+        <div class="card" style="padding: 2rem;">
+          <h3>
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round" style="color: var(--primary);">
+              <path
+                d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z" />
+            </svg>
+            Advisory
+          </h3>
+          <div id="advisory">
+            <p style="color: var(--text-muted); font-style: italic;">Advisory will appear here after diagnosis.</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</body>
+
+</html>
